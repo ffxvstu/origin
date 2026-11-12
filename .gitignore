@@ -15,3 +15,7 @@ node_modules/
 .env
 .env.dev
 .env.prod
+
+# Local editor configuration
+.editorconfig
+.gitattributes
