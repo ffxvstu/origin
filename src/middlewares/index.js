@@ -13,7 +13,9 @@ function notFound(req, res, next) {
 // Express identifies error handlers by their 4-argument signature, so `next` must stay declared.
 // eslint-disable-next-line no-unused-vars
 function errorHandler(err, req, res, next) {
-  res.status(res.statusCode || 500);
+  // res.statusCode defaults to 200, so only an explicitly assigned 4xx/5xx is kept;
+  // anything else is a genuine server-side failure and must surface as 500.
+  res.status(res.statusCode >= 400 ? res.statusCode : 500);
   res.json({
     message: err.message,
     stack: err.stack,
