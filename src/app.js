@@ -16,9 +16,11 @@ app.use(requestTime);
 
 const employees = require('./routes/employees');
 const users = require('./routes/users');
+const employeesPage = require('./ui/views');
 
 app.use('/api/employees', employees);
 app.use('/api/users', users);
+app.use('/ui/employees', employeesPage);
 
 app.use(notFound);
 app.use(errorHandler);

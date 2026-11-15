@@ -1,0 +1,12 @@
+<tbody>
+<% if (employees.length === 0) { %>
+      <tr><td class="empty" colspan="3">No employees found.</td></tr>
+<% } else { %>
+<% employees.forEach((employee) => { %>
+      <tr>
+        <td><%= employee._id %></td>
+        <td><%= employee.name %></td>
+        <td><%= employee.job %></td>
+      </tr>
+<% }); %>
+<% } %>
