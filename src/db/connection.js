@@ -17,13 +17,13 @@ function createInMemoryDb() {
     ]],
     ['user', [
       {
-        _id: '1', username: 'demo_user', name: 'Demo User', role: 'admin',
+        _id: 1, username: 'demo_user', name: 'Demo User', role: 'admin',
       },
       {
-        _id: '2', username: 'alice', name: 'Alice Johnson', role: 'user',
+        _id: 2, username: 'alice', name: 'Alice Johnson', role: 'user',
       },
       {
-        _id: '3', username: 'brian', name: 'Brian Smith', role: 'user',
+        _id: 3, username: 'brian', name: 'Brian Smith', role: 'user',
       },
     ]],
   ]);
@@ -51,7 +51,9 @@ function createInMemoryDb() {
           return collection.find((doc) => matchQuery(doc, query)) || null;
         },
         async insert(data) {
-          const newDoc = { ...data, _id: String(idCounter) };
+          // user 实体主键为 integer，其余集合保持 string
+          const newId = name === 'user' ? idCounter : String(idCounter);
+          const newDoc = { ...data, _id: newId };
           idCounter += 1;
           collection.push(newDoc);
           return newDoc;

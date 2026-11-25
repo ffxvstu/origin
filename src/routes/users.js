@@ -69,7 +69,7 @@ router.get('/username/:username', async (req, res, next) => {
 /* Get a user with the appropriate _id */
 router.get('/:id', async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const id = Number.parseInt(req.params.id, 10);
     const user = await users.findOne({ _id: id });
 
     if (!user) {
