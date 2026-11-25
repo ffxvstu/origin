@@ -2,6 +2,11 @@ const monk = require('monk');
 
 const dbUrl = process.env.DB_URL;
 const useStubDb = process.env.USE_STUB_DB === 'true';
+const isProduction = ['prod', 'production'].includes(process.env.NODE_ENV);
+
+if (isProduction && (useStubDb || !dbUrl)) {
+  throw new Error('Production requires a MongoDB connection: set DB_URL and USE_STUB_DB=false');
+}
 
 function createInMemoryDb() {
   const collections = new Map([
@@ -83,15 +88,15 @@ const stubDb = createInMemoryDb();
 
 if (useStubDb || !dbUrl) {
   console.log('Stub DB enabled');
+  stubDb.ready = Promise.resolve(stubDb);
   module.exports = stubDb;
 } else {
   const db = monk(dbUrl);
 
-  db.then(() => {
+  const ready = db.then(() => {
     console.log('Connected correctly to server');
-  }).catch((error) => {
-    console.error('Mongo connection failed, switching to stub DB:', error.message);
   });
+  ready.catch(() => {});
 
   db.on('error', (error) => {
     console.error('Mongo runtime error, using stub DB for new requests:', error.message);
@@ -112,4 +117,5 @@ if (useStubDb || !dbUrl) {
       return Reflect.get(target, prop, receiver);
     },
   });
+  module.exports.ready = ready;
 }
